@@ -14,6 +14,8 @@ Si hay que armar desde cero la tarjeta microSD del EV3, está [Preparar-microSD-
 - **Todas las versiones:** [Releases](https://github.com/material-robotica/openRoberta-ev3/releases)
 
 > Para publicar una versión nueva: en el repo, columna derecha → *Releases* → *Draft a new release*. Subir el zip en el recuadro *"Attach binaries by dropping them here"* (abajo del cuadro de descripción) y presionar *Publish release*. Mantener el nombre `OpenRoberta-EV3.zip` para que el enlace de descarga directa siga funcionando.
+>
+> El kit completo se descarga desde la sección Releases. Al descomprimirlo queda esta estructura:
 
 ## Contenido del kit
 
