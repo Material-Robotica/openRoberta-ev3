@@ -7,7 +7,12 @@ La guía paso a paso para la sala (driver + conexión en clase) está en[(Guia-O
 > Armado: octubre 2026 · Connector v1.7.0 · Java 17.0.20.1 (Temurin)
 >
 > El kit completo se descarga desde la sección Releases de este repositorio. Al descomprimirlo queda esta estructura:
+## Descarga del kit
 
+- **Última versión (descarga directa):** [OpenRoberta-EV3.zip](https://github.com/material-robotica/openRoberta-ev3/releases/latest/download/OpenRoberta-EV3.zip)
+- **Todas las versiones:** [Releases](https://github.com/material-robotica/openRoberta-ev3/releases)
+
+> Para publicar una versión nueva: en el repo, columna derecha → *Releases* → *Draft a new release*. Subir el zip en el recuadro *"Attach binaries by dropping them here"* (abajo del cuadro de descripción) y presionar *Publish release*. Mantener el nombre `OpenRoberta-EV3.zip` para que el enlace de descarga directa siga funcionando.
 ---
 
 ## Contenido del kit
