@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compilar el Open Roberta Connector con script</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg: #191a23;
+    --panel: #22232f;
+    --panel-2: #262838;
+    --border: #34364a;
+    --text: #e7e7ee;
+    --muted: #9497ab;
+    --amber: #f2a154;
+    --amber-soft: rgba(242,161,84,.12);
+    --green: #7bd88f;
+    --green-soft: rgba(123,216,143,.12);
+    --blue: #7aa2f7;
+    --blue-soft: rgba(122,162,247,.12);
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height:1.55;
+    padding: 48px 20px 80px;
+  }
+
+  .wrap{ max-width: 760px; margin: 0 auto; }
+
+  header{ margin-bottom: 44px; }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px; height:8px; border-radius:50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 4px var(--amber-soft);
+  }
+  h1{
+    font-family: var(--mono);
+    font-weight:800;
+    font-size: clamp(26px, 4vw, 34px);
+    line-height:1.15;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  h1 span{ color: var(--amber); }
+  .subtitle{
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 52ch;
+  }
+
+  .step{
+    position: relative;
+    display:grid;
+    grid-template-columns: 56px 1fr;
+    gap: 18px;
+    padding-bottom: 34px;
+  }
+  .step:not(:last-child)::before{
+    content:"";
+    position:absolute;
+    left:27px; top:56px; bottom:0;
+    width:2px;
+    background: linear-gradient(var(--border), transparent);
+  }
+  .num{
+    width:56px; height:56px;
+    border-radius:14px;
+    background: var(--panel);
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--mono);
+    font-weight:700;
+    font-size:18px;
+    color: var(--amber);
+    flex-shrink:0;
+  }
+  .content{ padding-top:6px; min-width:0; }
+  .content h2{
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight:700;
+    margin: 0 0 8px;
+    color: var(--text);
+  }
+  .content p{
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .content ul{
+    margin: 0 0 12px;
+    padding-left: 20px;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .content li{ margin-bottom: 4px; }
+  .content li code{ color: var(--text); }
+
+  code{
+    font-family: var(--mono);
+    background: var(--panel-2);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--green);
+  }
+
+  .term{
+    background: #14151d;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow:hidden;
+    margin: 10px 0;
+  }
+  .term-bar{
+    display:flex; gap:6px;
+    padding: 9px 12px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .term-bar span{
+    width:9px; height:9px; border-radius:50%;
+    background: #4b4d63;
+  }
+  .term pre{
+    margin:0;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--green);
+    overflow-x:auto;
+  }
+  .term pre .comment{ color: var(--muted); }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing:.04em;
+    padding: 3px 9px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .badge.opt{ background: var(--blue-soft); color: var(--blue); }
+  .badge.warn{ background: var(--amber-soft); color: var(--amber); }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 10px;
+  }
+  .panel + .panel{ margin-top: 12px; }
+  .panel-title{
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight:700;
+    margin: 0 0 8px;
+  }
+
+  .note{
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: var(--amber-soft);
+    border: 1px solid rgba(242,161,84,.35);
+    margin-top: 40px;
+  }
+  .note .badge{ margin-bottom: 8px; }
+  .note h2{
+    font-family: var(--mono);
+    font-size: 15px;
+    margin: 0 0 8px;
+  }
+  .note p{ color: var(--muted); font-size: 14px; margin: 0 0 10px; }
+
+  footer{
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    text-align:center;
+  }
+
+  .links{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .links a{ font-family:var(--mono); font-size:12.5px; color:var(--text); text-decoration:none;
+    background:var(--panel); border:1px solid var(--border); padding:6px 12px; border-radius:8px; }
+  .content strong{ color: var(--text); }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px; }
+  th,td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); color:var(--muted); vertical-align:top; }
+  th{ font-family:var(--mono); color:var(--text); font-size:12.5px; }
+  td a{ color: var(--blue); }
+  .src{ margin-top:40px; }
+  .src h2{ font-family:var(--mono); font-size:15px; margin:0 0 6px; }
+  .step{ break-inside: avoid; }
+  @media print{
+    .links a{ background:#fff; }
+    body{ background:#fff; color:#111; padding: 24px; }
+    .num{ background:#fff; }
+    .term{ background:#f5f5f5; }
+    .term pre{ color:#111; }
+    code{ background:#eee; color:#111; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Windows 10/11 · Robótica · Alternativa al kit portátil</div>
+    <h1>Compilar el <span>Open Roberta Connector</span></h1>
+    <p class="subtitle">Instala solo lo necesario (JDK 17 + Maven, si faltan) y compila el Connector con <code>compilar-openroberta-connector.ps1</code>. No instala Tomcat, VS Code ni extensiones.</p>
+    <div class="links">
+      <a href="https://github.com/OpenRoberta/openroberta-connector/releases">📦 Releases del Connector</a>
+      <a href="https://raw.githack.com/eliizquierdo/material_programacion_avanzada2026/main/recursos-instalacion/Instalacion-Automatica-Script-terminal.html">🧰 Entorno Java Web completo</a>
+    </div>
+  </header>
+  
+  <div class="step"><div class="num">01</div><div class="content"><h2>Armar la carpeta recursos-connector</h2><p>Crear la carpeta <code>C:\recursos-connector</code> con este contenido:</p>
+<ul>
+<li><code>compilar-openroberta-connector.ps1</code> — el script va <strong>dentro</strong> de esta carpeta</li>
+<li>El código fuente del Connector: el <code>.zip</code> <strong>Source code</strong> de la página de releases (no hace falta descomprimirlo) o la carpeta <code>openroberta-connector\</code> clonada con git</li>
+<li>El instalador <code>.msi</code> del JDK 17 (Eclipse Temurin) — <em>solo si la PC no tiene Java 17</em></li>
+<li><code>apache-maven-3.9.x\</code> — <em>solo si la PC no tiene Maven</em></li>
+</ul>
+<p>Si la máquina ya tiene Java 17 y Maven (por ejemplo, porque se le pasó el script del entorno Java Web), el script los detecta y no instala nada.</p></div></div>
+  <div class="step"><div class="num">02</div><div class="content"><h2>Abrir PowerShell como Administrador</h2><p>Clic derecho sobre PowerShell en el menú Inicio → <strong>Ejecutar como administrador</strong>. Se necesita para instalar el JDK y agregar Maven al PATH del sistema.</p></div></div>
+  <div class="step"><div class="num">03</div><div class="content"><h2>Ubicarse en la carpeta</h2><p>La ventana elevada arranca en otra carpeta por defecto:</p><div class="term"><div class="term-bar"><span></span><span></span><span></span></div><pre>cd C:\recursos-connector</pre></div></div></div>
+  <div class="step"><div class="num">04</div><div class="content"><h2>Permitir la ejecución de scripts</h2><p>Habilita la ejecución solo para esta ventana, sin cambiar la configuración permanente:</p><div class="term"><div class="term-bar"><span></span><span></span><span></span></div><pre>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</pre></div></div></div>
+  <div class="step"><div class="num">05</div><div class="content"><h2>Ejecutar el script</h2><div class="term"><div class="term-bar"><span></span><span></span><span></span></div><pre>.\compilar-openroberta-connector.ps1 -RecursosPath "C:\recursos-connector"</pre></div>
+<div class="panel"><span class="badge opt">+ DESTINO</span><p class="panel-title" style="margin-top:0">Elegir dónde dejar el resultado</p><p style="margin-bottom:8px">Por defecto queda en <code>C:\OpenRoberta-Connector</code>.</p><div class="term"><div class="term-bar"><span></span><span></span><span></span></div><pre>.\compilar-openroberta-connector.ps1 -RecursosPath "C:\recursos-connector" -Destino "D:\OpenRoberta-Connector"</pre></div></div>
+<div class="panel"><span class="badge warn">NECESITA INTERNET</span><p style="margin:0">Maven descarga las dependencias del Connector la primera vez (unas decenas de MB). Con conexión lenta puede tardar varios minutos: esperar a que aparezca <code>BUILD SUCCESS</code>.</p></div></div></div>
+  <div class="step"><div class="num">06</div><div class="content"><h2>Revisar la salida y abrir el Connector</h2><p>El script muestra las versiones de <code>java</code> y <code>mvn</code> y deja en la carpeta de destino:</p><div class="term"><div class="term-bar"><span></span><span></span><span></span></div><pre>C:\OpenRoberta-Connector\
+├── OpenRobertaConnector.jar
+├── libs\
+└── Abrir Open Roberta.bat   <span class="comment">doble clic para abrirlo</span></pre></div>
+<p>Para actualizar el kit portátil <code>OpenRoberta-EV3</code>: reemplazar el contenido de su carpeta <code>connector\</code> por el de <code>C:\OpenRoberta-Connector</code>. El <code>.bat</code> del kit no se toca.</p></div></div>
+  
+  <div class="note">
+    <span class="badge warn">⚠ SI ALGO FALLA</span>
+    <h2>"Se instaló el JDK pero 'java' no responde"</h2>
+    <p>La ventana no tomó las variables nuevas. Cerrar PowerShell, abrir otra como administrador y repetir los pasos 03 a 05: el script detecta el JDK ya instalado y sigue.</p>
+    <h2>La compilación falla</h2>
+    <p>Casi siempre es la conexión (Maven no pudo bajar una dependencia). Volver a ejecutar el script: lo ya descargado queda en caché.</p>
+  </div>
+
+  <div class="src">
+    <h2>Fuentes oficiales</h2>
+    <table>
+      <tr><th>Componente</th><th>Fuente</th></tr>
+      <tr><td>Open Roberta Connector (código fuente y releases)</td><td><a href="https://github.com/OpenRoberta/openroberta-connector/releases">github.com/OpenRoberta/openroberta-connector/releases</a></td></tr>
+      <tr><td>Eclipse Temurin JDK 17 (Windows x64, .msi)</td><td><a href="https://adoptium.net/temurin/releases/?version=17&amp;os=windows&amp;arch=x64">adoptium.net</a></td></tr>
+      <tr><td>Apache Maven 3.9.x (binary zip)</td><td><a href="https://maven.apache.org/download.cgi">maven.apache.org/download.cgi</a></td></tr>
+    </table>
+  </div>
+
+  <footer>Prof. Elizabeth Izquierdo · Robótica — Open Roberta + EV3 leJOS</footer>
+</div>
+</body>
+</html>
