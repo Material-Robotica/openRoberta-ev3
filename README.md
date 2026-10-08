@@ -2,19 +2,18 @@
 
 Kit portátil para conectar robots LEGO EV3 con leJOS al [Open Roberta Lab](https://lab.open-roberta.org) desde PCs con Windows 10/11, sin instalar Java ni compilar nada.
 
-La guía paso a paso para la sala (driver + conexión en clase) está en[(Guia-OpenRoberta-EV3.html)](https://material-robotica.github.io/openRoberta-ev3/Guia-OpenRoberta-EV3.html). Este README documenta **de dónde sale cada componente** y **cómo rehacer el kit** si hace falta.
+La guía paso a paso para la sala (driver + conexión en clase) está en [Guia-OpenRoberta-EV3.html](https://material-robotica.github.io/openRoberta-ev3/Guia-OpenRoberta-EV3.html). Este README documenta **de dónde sale cada componente** y **cómo rehacer el kit** si hace falta.
+
 Si hay que armar desde cero la tarjeta microSD del EV3, está [Preparar-microSD-EV3.html](https://material-robotica.github.io/openRoberta-ev3/Preparar-microSD-EV3.html).
 
 > Armado: octubre 2026 · Connector v1.7.0 · Java 17.0.20.1 (Temurin)
->
-> El kit completo se descarga desde la sección Releases de este repositorio. Al descomprimirlo queda esta estructura:
+
 ## Descarga del kit
 
 - **Última versión (descarga directa):** [OpenRoberta-EV3.zip](https://github.com/material-robotica/openRoberta-ev3/releases/latest/download/OpenRoberta-EV3.zip)
 - **Todas las versiones:** [Releases](https://github.com/material-robotica/openRoberta-ev3/releases)
 
 > Para publicar una versión nueva: en el repo, columna derecha → *Releases* → *Draft a new release*. Subir el zip en el recuadro *"Attach binaries by dropping them here"* (abajo del cuadro de descripción) y presionar *Publish release*. Mantener el nombre `OpenRoberta-EV3.zip` para que el enlace de descarga directa siga funcionando.
----
 
 ## Contenido del kit
 
