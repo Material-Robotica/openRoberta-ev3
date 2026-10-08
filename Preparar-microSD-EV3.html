@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preparar la microSD del EV3 — Open Roberta + leJOS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg: #191a23;
+    --panel: #22232f;
+    --panel-2: #262838;
+    --border: #34364a;
+    --text: #e7e7ee;
+    --muted: #9497ab;
+    --amber: #f2a154;
+    --amber-soft: rgba(242,161,84,.12);
+    --green: #7bd88f;
+    --green-soft: rgba(123,216,143,.12);
+    --blue: #7aa2f7;
+    --blue-soft: rgba(122,162,247,.12);
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height:1.55;
+    padding: 48px 20px 80px;
+  }
+
+  .wrap{ max-width: 760px; margin: 0 auto; }
+
+  header{ margin-bottom: 44px; }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px; height:8px; border-radius:50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 4px var(--amber-soft);
+  }
+  h1{
+    font-family: var(--mono);
+    font-weight:800;
+    font-size: clamp(26px, 4vw, 34px);
+    line-height:1.15;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  h1 span{ color: var(--amber); }
+  .subtitle{
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 52ch;
+  }
+
+  .step{
+    position: relative;
+    display:grid;
+    grid-template-columns: 56px 1fr;
+    gap: 18px;
+    padding-bottom: 34px;
+  }
+  .step:not(:last-child)::before{
+    content:"";
+    position:absolute;
+    left:27px; top:56px; bottom:0;
+    width:2px;
+    background: linear-gradient(var(--border), transparent);
+  }
+  .num{
+    width:56px; height:56px;
+    border-radius:14px;
+    background: var(--panel);
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--mono);
+    font-weight:700;
+    font-size:18px;
+    color: var(--amber);
+    flex-shrink:0;
+  }
+  .content{ padding-top:6px; }
+  .content h2{
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight:700;
+    margin: 0 0 8px;
+    color: var(--text);
+  }
+  .content p{
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .content ul{
+    margin: 0 0 12px;
+    padding-left: 20px;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .content li{ margin-bottom: 4px; }
+  .content li code{ color: var(--text); }
+
+  code{
+    font-family: var(--mono);
+    background: var(--panel-2);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--green);
+  }
+
+  .term{
+    background: #14151d;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow:hidden;
+    margin: 10px 0;
+  }
+  .term-bar{
+    display:flex; gap:6px;
+    padding: 9px 12px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .term-bar span{
+    width:9px; height:9px; border-radius:50%;
+    background: #4b4d63;
+  }
+  .term pre{
+    margin:0;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--green);
+    overflow-x:auto;
+  }
+  .term pre .comment{ color: var(--muted); }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight:600;
+    letter-spacing:.04em;
+    padding: 3px 9px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .badge.opt{ background: var(--blue-soft); color: var(--blue); }
+  .badge.warn{ background: var(--amber-soft); color: var(--amber); }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 10px;
+  }
+  .panel + .panel{ margin-top: 12px; }
+  .panel-title{
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight:700;
+    margin: 0 0 8px;
+  }
+
+  .note{
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: var(--amber-soft);
+    border: 1px solid rgba(242,161,84,.35);
+    margin-top: 40px;
+  }
+  .note .badge{ margin-bottom: 8px; }
+  .note h2{
+    font-family: var(--mono);
+    font-size: 15px;
+    margin: 0 0 8px;
+  }
+  .note p{ color: var(--muted); font-size: 14px; margin: 0 0 10px; }
+
+  footer{
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    text-align:center;
+  }
+
+  .part{
+    margin: 46px 0 26px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .part .tag{
+    font-family: var(--mono); font-weight:800; font-size:13px;
+    padding:5px 11px; border-radius:8px;
+    background: var(--amber); color:#191a23;
+  }
+  .part h2{ font-family: var(--mono); font-size:19px; margin:0; }
+  .part-sub{ color: var(--muted); font-size:14.5px; margin:-14px 0 26px; }
+  .content strong{ color: var(--text); }
+  kbd{
+    font-family: var(--mono); font-size:12px; font-weight:700;
+    background: var(--panel-2); border:1px solid var(--border);
+    border-bottom-width:3px; border-radius:6px; padding:1px 7px; color: var(--text);
+  }
+  .path{ font-family: var(--mono); font-size:13px; color: var(--text); }
+  .tree{ color: var(--text) !important; }
+  .note h3{ font-family: var(--mono); font-size:14px; margin:16px 0 4px; color: var(--text); }
+  .note ul{ color: var(--muted); font-size:14px; margin:0 0 6px; padding-left:20px; }
+  .step, .note h3 { break-inside: avoid; }
+  @media print{
+    .part .tag{ border:1px solid #111; }
+    .note{ background:#fff; }
+    kbd{ background:#fff; }
+    body{ background:#fff; color:#111; padding: 24px; }
+    .num{ background:#fff; }
+    .term{ background:#f5f5f5; }
+    .term pre{ color:#111; }
+    code{ background:#eee; color:#111; }
+  }
+  a{ color: var(--blue); }
+  .back{ font-family: var(--mono); font-size: 13px; display:inline-block; margin-bottom: 28px; text-decoration:none; }
+  .back:hover{ text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="Guia-OpenRoberta-EV3.html">← Volver a la guía de puesta en marcha</a>
+  <header>
+    <div class="eyebrow">Robótica · EV3 · Tarjeta microSD</div>
+    <h1>Preparar la <span>microSD</span> del EV3</h1>
+    <p class="subtitle">Instalar el firmware de Open Roberta (basado en leJOS) en una tarjeta microSD nueva. Solo hace falta si la tarjeta está vacía, dañada o se necesita una tarjeta extra.</p>
+  </header>
+
+  <div class="part"><span class="tag">ANTES DE EMPEZAR</span><h2>Qué se necesita</h2></div>
+  <p class="part-sub">Una sola vez por tarjeta.</p>
+
+  <div class="panel">
+    <ul style="margin:0;padding-left:20px;color:var(--muted);font-size:14.5px">
+      <li>Una tarjeta <strong>microSD de 2 a 32 GB</strong> (tipo SDHC). Las de más de 32 GB (SDXC) no funcionan en el EV3.</li>
+      <li>Un <strong>lector de tarjetas</strong> para la PC.</li>
+      <li>Una <strong>cuenta de Oracle</strong> (gratuita) para descargar Java.</li>
+      <li>El EV3 con las <strong>baterías cargadas</strong>: la instalación tarda y no se debe cortar.</li>
+    </ul>
+  </div>
+
+  <div class="part" style="margin-top:40px"><span class="tag">PASOS</span><h2>Armar la tarjeta</h2></div>
+  <p class="part-sub">Todo se hace en la PC, salvo el último paso.</p>
+
+  <div class="step"><div class="num">S1</div><div class="content"><h2>Formatear la microSD en FAT32</h2><p>Colocar la tarjeta en el lector. En el Explorador de archivos: clic derecho sobre la unidad → <strong>Formatear…</strong> → Sistema de archivos <strong>FAT32</strong> → <strong>Iniciar</strong>.</p>
+<p><strong>Atención:</strong> formatear borra todo el contenido de la tarjeta.</p></div></div>
+
+  <div class="step"><div class="num">S2</div><div class="content"><h2>Descargar el firmware de Open Roberta</h2><p>Descargar el archivo del firmware (versión 2.6.2, unos 34 MB):</p>
+<p><a href="https://github.com/OpenRoberta/robertalab-ev3lejos-v1/releases/download/2.6.2/OpenRobertaFirmware-2.6.2-release.zip">OpenRobertaFirmware-2.6.2-release.zip</a></p>
+<p>Descomprimir el <code>.zip</code> y copiar su contenido a la <strong>raíz</strong> de la microSD. Los archivos tienen que quedar sueltos en la tarjeta, no dentro de una carpeta.</p></div></div>
+
+  <div class="step"><div class="num">S3</div><div class="content"><h2>Descargar Java para el EV3</h2><p>Entrar a la página de Oracle de Java para LEGO EV3 e iniciar sesión con la cuenta de Oracle:</p>
+<p><a href="https://www.oracle.com/java/technologies/javaseemeddedev3-downloads.html">Java SE Embedded para LEGO Mindstorms EV3</a></p>
+<p>Elegir <strong>Java SE Embedded version 7 Update 60</strong> → <strong>ARMv5 Linux - Headless</strong> (unos 32 MB). <strong>No</strong> elegir la versión 8.</p>
+<div class="term"><div class="term-bar"><span></span><span></span><span></span></div><pre>ejre-7u60-fcs-b19-linux-arm-sflt-headless-07_may_2014.tar.gz</pre></div></div></div>
+
+  <div class="step"><div class="num">S4</div><div class="content"><h2>Copiar Java a la tarjeta sin descomprimir</h2><p>Copiar el archivo de Java <strong>tal cual</strong> a la raíz de la microSD, junto a los archivos del firmware. No descomprimirlo: el EV3 lo instala solo.</p>
+<p>Verificar que el nombre termine en <code>.tar.gz</code>. Algunos navegadores lo descomprimen a medias y lo dejan como <code>.tar</code>; en ese caso, volver a descargarlo.</p>
+<p>Expulsar la tarjeta de forma segura antes de sacarla del lector.</p></div></div>
+
+  <div class="step"><div class="num">S5</div><div class="content"><h2>Instalar en el EV3</h2><p>Con el EV3 <strong>apagado</strong>, colocar la microSD en la ranura del costado del ladrillo. Encenderlo y esperar: la instalación tarda entre <strong>10 y 15 minutos</strong> e incluye un reinicio automático.</p>
+<p>No apagar el EV3 ni sacar la tarjeta durante ese tiempo. Queda listo cuando la pantalla muestra <code>10.0.1.1</code> y <strong>OpenRoberta Lab</strong>. A partir de ahí se sigue con la <a href="Guia-OpenRoberta-EV3.html">guía de puesta en marcha</a>.</p></div></div>
+
+  <div class="panel">
+    <p class="panel-title">▶ Video de referencia</p>
+    <p style="margin:0;color:var(--muted);font-size:14.5px">Conviene mirarlo antes de empezar para tener claros los pasos: <a href="https://www.youtube.com/watch?v=nn7Prrf9d48">youtube.com/watch?v=nn7Prrf9d48</a></p>
+  </div>
+
+  <div class="note">
+    <span class="badge warn">⚠ SI ALGO FALLA</span>
+    <h3>El EV3 arranca con el sistema original de LEGO</h3>
+    <ul><li>La tarjeta no se está leyendo. Revisar que esté en FAT32, que sea de 32 GB o menos y que los archivos del firmware estén en la raíz y no dentro de una carpeta.</li></ul>
+    <h3>Se queda mucho tiempo en la pantalla de carga</h3>
+    <ul><li>La primera vez es normal que tarde. Esperar al menos 15 minutos antes de apagarlo.</li></ul>
+    <h3>Arranca leJOS pero da error de Java</h3>
+    <ul><li>Revisar que el archivo de Java sea la versión <strong>7 Update 60 ARMv5</strong>, que termine en <code>.tar.gz</code> y que esté en la raíz. Volver a formatear y armar la tarjeta desde S1.</li></ul>
+    <h3>Para armar varias tarjetas</h3>
+    <ul><li>Guardar en la PC los dos archivos descargados y repetir S1, S2 y S4 con cada tarjeta. El archivo de Java es de Oracle y no se puede subir al repositorio público.</li></ul>
+  </div>
+
+  <footer>Prof. Elizabeth Izquierdo · Robótica — Open Roberta + EV3 leJOS</footer>
+</div>
+</body>
+</html>
