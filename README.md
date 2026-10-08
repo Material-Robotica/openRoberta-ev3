@@ -2,7 +2,7 @@
 
 Kit portátil para conectar robots LEGO EV3 con leJOS al [Open Roberta Lab](https://lab.open-roberta.org) desde PCs con Windows 10/11, sin instalar Java ni compilar nada.
 
-La guía paso a paso para la sala (driver + conexión en clase) está en[`Guia-OpenRoberta-EV3.html`](Guia-OpenRoberta-EV3.html)](https://material-robotica.github.io/openRoberta-ev3/Guia-OpenRoberta-EV3.html). Este README documenta **de dónde sale cada componente** y **cómo rehacer el kit** si hace falta.
+La guía paso a paso para la sala (driver + conexión en clase) está en(Guia-OpenRoberta-EV3.html)](https://material-robotica.github.io/openRoberta-ev3/Guia-OpenRoberta-EV3.html). Este README documenta **de dónde sale cada componente** y **cómo rehacer el kit** si hace falta.
 
 > Armado: octubre 2026 · Connector v1.7.0 · Java 17.0.20.1 (Temurin)
 
