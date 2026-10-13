@@ -240,6 +240,15 @@
     .term pre{ color:#111; }
     code{ background:#eee; color:#111; }
   }
+  .content a:not(.dl){ color: var(--blue); }
+  .dl{
+    display:inline-flex; align-items:center; gap:10px; margin:6px 0 14px;
+    font-family: var(--mono); font-weight:700; font-size:14px; text-decoration:none;
+    background: var(--amber); color:#191a23; padding:10px 16px; border-radius:10px;
+  }
+  .dl small{ font-weight:500; opacity:.75; }
+  .dl-url{ font-family: var(--mono); font-size:12px; color: var(--muted); word-break: break-all; margin:0 0 12px; }
+  @media print{ .dl{ background:#fff; border:1.5px solid #111; color:#111; } }
 </style>
 </head>
 <body>
@@ -253,7 +262,12 @@
   <div class="part"><span class="tag">PARTE A</span><h2>Preparar cada PC</h2></div>
   <p class="part-sub">Una sola vez por máquina. Requiere usuario administrador.</p>
   
-  <div class="step"><div class="num">A1</div><div class="content"><h2>Copiar el kit a la PC</h2><p>Copiar la carpeta <code>OpenRoberta-EV3</code> completa a la PC (por ejemplo a <span class="path">C:\OpenRoberta-EV3</span>) o usarla directamente desde el pendrive. No hace falta instalar Java, Maven ni VS Code: el kit trae todo.</p>
+  <div class="step"><div class="num">A1</div><div class="content"><h2>Descargar el kit y copiarlo a la PC</h2>
+<p>Descargar el kit desde este enlace:</p>
+<a class="dl" href="https://github.com/material-robotica/openRoberta-ev3/releases/latest/download/OpenRoberta-EV3.zip">⬇ Descargar OpenRoberta-EV3.zip <small>(~59 MB)</small></a>
+<p class="dl-url">https://github.com/material-robotica/openRoberta-ev3/releases/latest/download/OpenRoberta-EV3.zip</p>
+<p>Descomprimir el <code>.zip</code>: clic derecho sobre el archivo → <strong>Extraer todo…</strong> → <strong>Extraer</strong>. Los <code>.bat</code> <strong>no funcionan</strong> si se abren desde dentro del <code>.zip</code> sin descomprimir.</p>
+<p>Copiar la carpeta <code>OpenRoberta-EV3</code> completa a la PC (por ejemplo a <span class="path">C:\OpenRoberta-EV3</span>) o a un pendrive para llevarla a las demás máquinas. Si al descomprimir queda una carpeta <code>OpenRoberta-EV3</code> dentro de otra con el mismo nombre, usar la de adentro (la que tiene los <code>.bat</code>). No hace falta instalar Java, Maven ni VS Code: el kit trae todo.</p>
 <div class="term"><div class="term-bar"><span></span><span></span><span></span></div><pre><span class="tree">OpenRoberta-EV3\
 ├── 1 - Abrir Open Roberta.bat
 ├── 2 - Verificar EV3.bat
@@ -263,8 +277,7 @@
 └── driver-ev3\     <span class="comment">ev3-rndis.inf</span></span></pre></div>
 <p>No mover ni renombrar las carpetas internas: los archivos <code>.bat</code> las buscan por nombre.</p></div></div>
   <div class="step"><div class="num">A2</div><div class="content"><h2>Encender y conectar el EV3</h2><p>Encender el EV3 con la microSD de leJOS puesta y esperar a que la pantalla muestre <code>10.0.1.1</code> y <strong>OpenRoberta Lab</strong>. El primer arranque con una tarjeta nueva puede tardar varios minutos.</p>
-<p>Conectar el cable al <strong>mini-USB de arriba del ladrillo</strong> (marcado <em>PC</em>, junto a los puertos A–D). El USB grande del costado no sirve para la PC.</p></div></div>
-  El USB grande del costado no sirve para la PC.</p>
+<p>Conectar el cable al <strong>mini-USB de arriba del ladrillo</strong> (marcado <em>PC</em>, junto a los puertos A–D). El USB grande del costado no sirve para la PC.</p>
 <p>Si la tarjeta está vacía o no arranca leJOS, prepararla primero con <a href="Preparar-microSD-EV3.html">esta guía</a>.</p></div></div>
   <div class="step"><div class="num">A3</div><div class="content"><h2>Ver cómo reconoce Windows al EV3</h2><p>Doble clic en <code>2 - Verificar EV3.bat</code>. La columna <strong>Class</strong> indica qué hacer:</p>
 <div class="panel"><span class="badge" style="background:var(--green-soft);color:var(--green)">CLASS NET</span><p style="margin:0">El driver ya está bien. Si el ping responde, saltar a la <strong>Parte B</strong>.</p></div>
