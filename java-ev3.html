@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Programación en Java con Open Roberta Lab</title>
+    <!-- MathJax para visualización de expresiones matemáticas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #0f172a;
+            --accent-color: #0d9488;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Sidebar Nav */
+        .sidebar {
+            width: 280px;
+            background-color: var(--secondary-color);
+            color: #fff;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .sidebar h2 {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: translateX(4px);
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1100px;
+        }
+
+        header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        section h2 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        section h3 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 1rem 1.25rem;
+            border-left: 4px solid var(--primary-color);
+            background-color: #eff6ff;
+            border-radius: 0 8px 8px 0;
+            margin: 1.25rem 0;
+            font-size: 0.95rem;
+        }
+
+        .callout-warning {
+            border-left-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .callout-tip {
+            border-left-color: var(--accent-color);
+            background-color: #f0fdf4;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Java Syntax Colors */
+        .kw { color: #f43f5e; font-weight: bold; } /* Keywords */
+        .type { color: #38bdf8; }                 /* Types */
+        .str { color: #4ade80; }                  /* Strings */
+        .num { color: #fbbf24; }                  /* Numbers */
+        .cmnt { color: #94a3b8; font-style: italic; } /* Comments */
+        .fn { color: #c084fc; }                   /* Methods */
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Project Cards */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .project-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            background: #fafafa;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .project-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <h2>Contenido</h2>
+        <ul>
+            <li><a href="#sec-intro">1. Introducción y Entorno</a></li>
+            <li><a href="#sec-estructura">2. Estructura Base Java</a></li>
+            <li><a href="#sec-movimiento">3. Movimiento Básico</a></li>
+            <li><a href="#sec-giros">4. Maniobras y Giros</a></li>
+            <li><a href="#sec-sensores">5. Uso de Sensores</a></li>
+            <li><a href="#sec-proyectos">6. Proyectos Integradores</a></li>
+            <li><a href="#sec-buenas-practicas">7. Buenas Prácticas</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="content">
+        <header>
+            <h1>Guía de Programación en Java con Open Roberta Lab</h1>
+            <p class="subtitle">Manual Didáctico para Estudiantes de 1.º de Bachillerato</p>
+            <div class="badge-container">
+                <span class="badge">Nivel: Bachillerato</span>
+                <span class="badge">Plataforma: Open Roberta (LEGO EV3 / leJOS)</span>
+                <span class="badge">Lenguaje: Java (POO)</span>
+            </div>
+        </header>
+
+        <!-- Section 1 -->
+        <section id="sec-intro">
+            <h2>1. Introducción y Configuración del Entorno</h2>
+            <p>
+                En Open Roberta Lab, el código visual en bloques (NEPO) se traduce directamente a código <strong>Java</strong> nativo. Esta guía permite a los estudiantes dar el salto conceptual hacia la programación textual en Java utilizando la capa de abstracción de hardware <strong>HAL (Hardware Abstraction Layer)</strong>.
+            </p>
+
+            <h3>A. Programación en la Simulación Web</h3>
+            <p>Para trabajar sin necesidad de un robot físico inmediato:</p>
+            <ul>
+                <li>Ingresar a <a href="https://lab.open-roberta.org/" target="_blank">Open Roberta Lab</a>.</li>
+                <li>Seleccionar el sistema <strong>LEGO EV3 (leJOS)</strong>.</li>
+                <li>Hacer clic en la pestaña <strong>SIM</strong> del margen derecho para desplegar el simulador 2D.</li>
+                <li>Para ver o alternar al código en Java, presionar el botón de código <code>&lt;/&gt;</code> en el menú superior.</li>
+            </ul>
+
+            <h3>B. Conexión con Robot Físico LEGO EV3</h3>
+            <p>Para transferir y ejecutar el código Java en el bloque EV3 real:</p>
+            <ul>
+                <li>El kit utiliza el firmware <strong>leJOS</strong> para ejecutar el código compilado de Java en el robot.</li>
+                <li>La conexión se establece mediante la aplicación ejecutable <strong>Open Roberta Connector</strong>.</li>
+                <li>El robot se conecta por USB y Windows le asigna la IP fija <code>10.0.1.1</code> a través del driver RNDIS.</li>
+            </ul>
+
+            <div class="callout callout-tip">
+                <strong>Consejo pedagógico:</strong> Permite que los estudiantes depuren la lógica condicional primero en el simulador interactivo antes de descargar el programa al robot físico.
+            </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section id="sec-estructura">
+            <h2>2. Estructura Base de un Programa Java</h2>
+            <p>Todos los programas generados en la plataforma se compilan dentro de la clase principal <code>NEPOprog</code>. A continuación se muestra la plantilla estándar:</p>
+
+            <pre><code><span class="kw">package</span> generated.main;
+
+<span class="kw">import</span> de.fhg.iais.roberta.runtime.*;
+<span class="kw">import</span> de.fhg.iais.roberta.mode.sensor.*;
+<span class="kw">import</span> de.fhg.iais.roberta.mode.action.*;
+<span class="kw">import</span> de.fhg.iais.roberta.components.*;
+
+<span class="kw">public class</span> <span class="type">NEPOprog</span> {
+    <span class="kw">private static</span> <span class="type">Configuration</span> brickConfiguration;
+    <span class="kw">private static</span> <span class="type">Hal</span> hal;
+
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="type">String</span>[] args) {
+        <span class="kw">try</span> {
+            brickConfiguration = <span class="kw">new</span> <span class="type">EV3Configuration</span>.Builder().build();
+            hal = <span class="kw">new</span> <span class="type">Hal</span>(brickConfiguration, <span class="kw">null</span>);
+            
+            <span class="fn">start</span>(); <span class="cmnt">// Punto de entrada a la lógica del estudiante</span>
+            
+        } <span class="kw">catch</span> (<span class="type">Exception</span> e) {
+            <span class="type">Hal</span>.<span class="fn">showErrorMessage</span>(<span class="str">"Error en la ejecucion"</span>);
+        }
+    }
+
+    <span class="kw">public static void</span> <span class="fn">start</span>() {
+        <span class="cmnt">// --- El código del alumno se escribe aquí ---</span>
+    }
+}</code></pre>
+
+            <div class="callout">
+                <strong>Concepto clave:</strong> El objeto <code>hal</code> (Hardware Abstraction Layer) proporciona todos los métodos estandarizados para leer sensores y accionar motores.
+            </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section id="sec-movimiento">
+            <h2>3. Movimiento Básico: Adelante y Atrás</h2>
+            <p>Para desplazar el robot se pueden controlar la velocidad (rango de $0$ a $100\%$) y la distancia o tiempo de marcha.</p>
+
+            <h3>Ejemplo 1: Avanzar y Retroceder por Distancia Determinada</h3>
+            <pre><code><span class="kw">public static void</span> <span class="fn">start</span>() {
+    <span class="type">int</span> velocidad = <span class="num">50</span>;        <span class="cmnt">// 50% de potencia</span>
+    <span class="type">double</span> distanciaCm = <span class="num">30.0</span>;  <span class="cmnt">// 30 centímetros</span>
+
+    <span class="cmnt">// Mover hacia adelante 30 cm</span>
+    hal.<span class="fn">driveDistance</span>(<span class="type">DriveDirection</span>.FOREWARD, velocidad, distanciaCm);
+
+    <span class="cmnt">// Pausa de 1 segundo (1000 milisegundos)</span>
+    hal.<span class="fn">waitFor</span>(<span class="num">1000</span>);
+
+    <span class="cmnt">// Mover hacia atrás 30 cm</span>
+    hal.<span class="fn">driveDistance</span>(<span class="type">DriveDirection</span>.BACKWARD, velocidad, distanciaCm);
+}</code></pre>
+
+            <h3>Ejemplo 2: Control Continuo por Tiempo</h3>
+            <pre><code><span class="kw">public static void</span> <span class="fn">start</span>() {
+    <span class="cmnt">// Iniciar marcha continua hacia adelante</span>
+    hal.<span class="fn">regulatedDrive</span>(<span class="type">DriveDirection</span>.FOREWARD, <span class="num">60</span>);
+    
+    <span class="cmnt">// Mantener la marcha durante 2.5 segundos</span>
+    hal.<span class="fn">waitFor</span>(<span class="num">2500</span>);
+    
+    <span class="cmnt">// Detener el movimiento</span>
+    hal.<span class="fn">stopRegulatedDrive</span>();
+}</code></pre>
+        </section>
+
+        <!-- Section 4 -->
+        <section id="sec-giros">
+            <h2>4. Maniobras y Giros</h2>
+            <p>En robótica móvil diferencial existen dos modalidades principales de giro:</p>
+            <ol>
+                <li><strong>Giro Sobre su Eje (Pivot):</strong> Las ruedas giran en sentidos opuestos o una rueda permanece inmóvil.</li>
+                <li><strong>Giro Curvo:</strong> Ambas ruedas avanzan a velocidades diferentes.</li>
+            </ol>
+
+            <h3>Ejemplo 1: Giro por Ángulo Determinado</h3>
+            <pre><code><span class="kw">public static void</span> <span class="fn">start</span>() {
+    <span class="type">int</span> velGiro = <span class="num">40</span>;
+
+    <span class="cmnt">// Giro de 90 grados a la izquierda</span>
+    hal.<span class="fn">rotateDirectionRegulated</span>(<span class="type">TurnDirection</span>.LEFT, velGiro, <span class="num">90</span>);
+    hal.<span class="fn">waitFor</span>(<span class="num">500</span>);
+
+    <span class="cmnt">// Giro de 90 grados a la derecha</span>
+    hal.<span class="fn">rotateDirectionRegulated</span>(<span class="type">TurnDirection</span>.RIGHT, velGiro, <span class="num">90</span>);
+}</code></pre>
+
+            <h3>Ejemplo 2: Recorrido Cuadrado usando un Bucle <code>for</code></h3>
+            <pre><code><span class="kw">public static void</span> <span class="fn">start</span>() {
+    <span class="type">int</span> lados = <span class="num">4</span>;
+    <span class="type">int</span> velocidad = <span class="num">50</span>;
+    <span class="type">double</span> ladoCm = <span class="num">25.0</span>;
+
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; lados; i++) {
+        <span class="cmnt">// Avanzar el lado del cuadrado</span>
+        hal.<span class="fn">driveDistance</span>(<span class="type">DriveDirection</span>.FOREWARD, velocidad, ladoCm);
+        hal.<span class="fn">waitFor</span>(<span class="num">200</span>);
+
+        <span class="cmnt">// Girar 90 grados a la derecha</span>
+        hal.<span class="fn">rotateDirectionRegulated</span>(<span class="type">TurnDirection</span>.RIGHT, <span class="num">30</span>, <span class="num">90</span>);
+        hal.<span class="fn">waitFor</span>(<span class="num">200</span>);
+    }
+}</code></pre>
+        </section>
+
+        <!-- Section 5 -->
+        <section id="sec-sensores">
+            <h2>5. Uso de Sensores</h2>
+            <p>Resumen de llamadas para interactuar con los sensores en Open Roberta Java:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sensor</th>
+                        <th>Puerto Típico</th>
+                        <th>Método Java en <code>hal</code></th>
+                        <th>Tipo de Retorno</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Táctil / Pulsador</strong></td>
+                        <td><code>SensorPort.S1</code></td>
+                        <td><code>hal.isPressed(SensorPort.S1)</code></td>
+                        <td><code>boolean</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ultrasonidos</strong></td>
+                        <td><code>SensorPort.S4</code></td>
+                        <td><code>hal.getUltraSonicSensorDistance(SensorPort.S4)</code></td>
+                        <td><code>float</code> (cm)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Color / Luz</strong></td>
+                        <td><code>SensorPort.S3</code></td>
+                        <td><code>hal.getColorSensorSample(SensorPort.S3, ColorSensorMode.RED)</code></td>
+                        <td><code>float</code> (0-100%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Giroscopio</strong></td>
+                        <td><code>SensorPort.S2</code></td>
+                        <td><code>hal.getGyroSensorValue(SensorPort.S2, GyroSensorMode.ANGLE)</code></td>
+                        <td><code>float</code> (grados)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>A. Sensor Táctil (Detección de Colisión)</h3>
+            <pre><code><span class="kw">public static void</span> <span class="fn">start</span>() {
+    hal.<span class="fn">regulatedDrive</span>(<span class="type">DriveDirection</span>.FOREWARD, <span class="num">40</span>);
+
+    <span class="cmnt">// Mantenemos el movimiento mientras NO se presione el pulsador</span>
+    <span class="kw">while</span> (!hal.<span class="fn">isPressed</span>(<span class="type">SensorPort</span>.S1)) {
+        hal.<span class="fn">waitFor</span>(<span class="num">50</span>); <span class="cmnt">// Pausa para liberar tiempo de CPU</span>
+    }
+
+    <span class="cmnt">// Al chocar: detenerse y retroceder</span>
+    hal.<span class="fn">stopRegulatedDrive</span>();
+    hal.<span class="fn">driveDistance</span>(<span class="type">DriveDirection</span>.BACKWARD, <span class="num">30</span>, <span class="num">15.0</span>);
+}</code></pre>
+
+            <h3>B. Sensor de Ultrasonidos (Evasión de Obstáculos)</h3>
+            <pre><code><span class="kw">public static void</span> <span class="fn">start</span>() {
+    <span class="type">double</span> umbralCm = <span class="num">15.0</span>;
+    hal.<span class="fn">regulatedDrive</span>(<span class="type">DriveDirection</span>.FOREWARD, <span class="num">50</span>);
+
+    <span class="kw">while</span> (<span class="kw">true</span>) {
+        <span class="type">float</span> distancia = hal.<span class="fn">getUltraSonicSensorDistance</span>(<span class="type">SensorPort</span>.S4);
+
+        <span class="kw">if</span> (distancia &lt; umbralCm) {
+            <span class="cmnt">// Esquivar obstáculo</span>
+            hal.<span class="fn">stopRegulatedDrive</span>();
+            hal.<span class="fn">rotateDirectionRegulated</span>(<span class="type">TurnDirection</span>.RIGHT, <span class="num">40</span>, <span class="num">90</span>);
+            hal.<span class="fn">regulatedDrive</span>(<span class="type">DriveDirection</span>.FOREWARD, <span class="num">50</span>);
+        }
+        hal.<span class="fn">waitFor</span>(<span class="num">50</span>);
+    }
+}</code></pre>
+
+            <h3>C. Control Proporcional para Seguidor de Línea</h3>
+            <p>
+                Para seguir el borde de una línea negra con suavidad, se calcula el error con respecto al punto medio de luz reflejada $T = \frac{C_{\text{blanco}} + C_{\text{negro}}}{2}$:
+            </p>
+            <pre><code><span class="kw">public static void</span> <span class="fn">start</span>() {
+    <span class="type">float</span> puntoMedio = <span class="num">50.0f</span>; <span class="cmnt">// Umbral medio</span>
+    <span class="type">float</span> kp = <span class="num">0.6f</span>;          <span class="cmnt">// Ganancia proporcional</span>
+    <span class="type">int</span> velocidadBase = <span class="num">30</span>;
+
+    <span class="kw">while</span> (<span class="kw">true</span>) {
+        <span class="type">float</span> luz = hal.<span class="fn">getColorSensorSample</span>(<span class="type">SensorPort</span>.S3, <span class="type">ColorSensorMode</span>.RED);
+        <span class="type">float</span> error = luz - puntoMedio;
+        <span class="type">float</span> correccion = error * kp;
+
+        <span class="type">int</span> velIzquierda = (<span class="type">int</span>) (velocidadBase + correccion);
+        <span class="type">int</span> velDerecha   = (<span class="type">int</span>) (velocidadBase - correccion);
+
+        hal.<span class="fn">regulatedDrive</span>(<span class="type">ActorPort</span>.B, <span class="type">ActorPort</span>.C, velIzquierda, velDerecha);
+        hal.<span class="fn">waitFor</span>(<span class="num">20</span>);
+    }
+}</code></pre>
+        </section>
+
+        <!-- Section 6 -->
+        <section id="sec-proyectos">
+            <h2>6. Proyectos Desafiantes para el Aula</h2>
+            <p>Propuestas integradoras para evaluar algoritmos, condicionales y POO en 1.º de Bachillerato:</p>
+
+            <div class="project-grid">
+                <div class="project-card">
+                    <h4>Proyecto 1: Explorador Autónomo</h4>
+                    <p>
+                        El robot avanza en un área delimitada. Si detecta un obstáculo a menos de $20\text{ cm}$ con el ultrasonido, emite una alerta, retrocede y selecciona de forma aleatoria girar a la izquierda o derecha.
+                    </p>
+                </div>
+                <div class="project-card">
+                    <h4>Proyecto 2: Repartidor de Logística</h4>
+                    <p>
+                        Sigue una línea negra continua. Cuando el sensor detecta una marca de color rojo, se detiene durante 3 segundos para simular la descarga de mercancía y reanuda la ruta.
+                    </p>
+                </div>
+                <div class="project-card">
+                    <h4>Proyecto 3: Resolutor de Laberintos</h4>
+                    <p>
+                        Implementar el algoritmo de la mano derecha utilizando el sensor de ultrasonidos lateral para mantener una distancia fija respecto a la pared mediante la fórmula de error $e = d_{\text{deseada}} - d_{\text{medida}}$.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7 -->
+        <section id="sec-buenas-practicas">
+            <h2>7. Buenas Prácticas de Programación en Robótica</h2>
+            <ul>
+                <li><strong>Nombres significativos y constantes:</strong> Declarar puertos y parámetros al inicio del programa para facilitar modificaciones en el aula.
+                    <pre><code><span class="kw">final</span> <span class="type">SensorPort</span> PUERTO_ULTRASONIDO = <span class="type">SensorPort</span>.S4;
+<span class="kw">final</span> <span class="type">float</span> DISTANCIA_UMBRAL = <span class="num">20.0f</span>;</code></pre>
+                </li>
+                <li><strong>Pausas en bucles continuos:</strong> Incluir siempre una pequeña pausa de refresco (ej. <code>hal.waitFor(20);</code>) dentro de los bucles <code>while(true)</code> para evitar saturar el procesador del robot o del simulador.</li>
+                <li><strong>Salida de depuración:</strong> Utilizar <code>System.out.println()</code> para rastrear valores numéricos de los sensores en tiempo real durante las pruebas.</li>
+            </ul>
+        </section>
+    </main>
+
+</body>
+</html>
